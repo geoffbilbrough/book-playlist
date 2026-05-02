@@ -151,6 +151,10 @@ router.post('/create-playlist', async (req, res) => {
     res.json({ success: true, playlistUrl, trackCount: trackUris.length });
   } catch (err) {
     console.error('Create playlist error:', err.response?.data || err.message);
+    console.error('Status:', err.response?.status);
+    console.error('URL:', err.config?.url);
+    console.error('Token (first 20):', token?.slice(0, 20));
+    console.error('UserId:', userId);
     res.status(500).json({ error: 'Failed to create Spotify playlist.' });
   }
 });
