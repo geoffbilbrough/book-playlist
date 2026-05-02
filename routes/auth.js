@@ -54,8 +54,7 @@ async function handleCallback(req, res) {
       },
     );
 
-    const { access_token, refresh_token, expires_in, scope } = tokenRes.data;
-    console.log('Spotify granted scopes:', scope);
+    const { access_token, refresh_token, expires_in } = tokenRes.data;
 
     req.session.spotifyTokens = {
       access_token,

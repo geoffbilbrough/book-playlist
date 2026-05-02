@@ -9,7 +9,6 @@ function authHeader() {
   return `Basic ${Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64')}`;
 }
 
-// Refresh access token if it has expired or will expire within 2 minutes
 async function ensureFreshToken(req) {
   if (!req.session.spotifyTokens) return false;
 
@@ -45,7 +44,6 @@ async function ensureFreshToken(req) {
 }
 
 // POST /api/spotify/search — search Spotify for a list of songs
-// Body: { songs: [{ title, artist }, ...] }
 router.post('/search', async (req, res) => {
   const token = await ensureFreshToken(req);
   if (!token) return res.status(401).json({ error: 'Not authenticated with Spotify.' });
@@ -64,7 +62,6 @@ router.post('/search', async (req, res) => {
 
         const track = searchRes.data.tracks?.items?.[0];
         if (!track) {
-          // Fallback: looser search by title only
           const fallbackRes = await axios.get('https://api.spotify.com/v1/search', {
             params: { q: encodeURIComponent(song.title), type: 'track', limit: 1 },
             headers: { Authorization: `Bearer ${token}` },
@@ -109,7 +106,6 @@ router.post('/search', async (req, res) => {
 });
 
 // POST /api/spotify/create-playlist
-// Body: { bookTitle, bookAuthor, songs: [{ track_uri, ... }] }
 router.post('/create-playlist', async (req, res) => {
   const token = await ensureFreshToken(req);
   if (!token) return res.status(401).json({ error: 'Not authenticated with Spotify.' });
@@ -125,7 +121,6 @@ router.post('/create-playlist', async (req, res) => {
   }
 
   try {
-    // Create the playlist
     const playlistRes = await axios.post(
       `https://api.spotify.com/v1/me/playlists`,
       {
@@ -138,12 +133,9 @@ router.post('/create-playlist', async (req, res) => {
 
     const playlistId = playlistRes.data.id;
     const playlistUrl = playlistRes.data.external_urls.spotify;
-    console.log('Playlist created:', playlistId, 'owner:', playlistRes.data.owner?.id);
 
-    // Add tracks (Spotify allows up to 100 per request)
     for (let i = 0; i < trackUris.length; i += 100) {
       const batch = trackUris.slice(i, i + 100);
-      console.log('Adding tracks to playlist:', playlistId, 'batch:', JSON.stringify(batch.slice(0, 2)));
       const addRes = await fetch(
         `https://api.spotify.com/v1/playlists/${playlistId}/items`,
         {
@@ -152,16 +144,15 @@ router.post('/create-playlist', async (req, res) => {
           body: JSON.stringify({ uris: batch }),
         },
       );
-      const addData = await addRes.json();
-      console.log('Add tracks response:', addRes.status, JSON.stringify(addData));
-      if (!addRes.ok) throw new Error(`Add tracks failed: ${addRes.status} ${JSON.stringify(addData)}`);
+      if (!addRes.ok) {
+        const addData = await addRes.json();
+        throw new Error(`Add tracks failed: ${addRes.status} ${JSON.stringify(addData)}`);
+      }
     }
 
     res.json({ success: true, playlistUrl, trackCount: trackUris.length });
   } catch (err) {
     console.error('Create playlist error:', err.response?.data || err.message);
-    console.error('Token (first 20):', token?.slice(0, 20));
-    console.error('UserId:', userId);
     res.status(500).json({ error: 'Failed to create Spotify playlist.' });
   }
 });
