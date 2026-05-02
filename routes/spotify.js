@@ -145,7 +145,7 @@ router.post('/create-playlist', async (req, res) => {
       const batch = trackUris.slice(i, i + 100);
       console.log('Adding tracks to playlist:', playlistId, 'batch:', JSON.stringify(batch.slice(0, 2)));
       const addRes = await fetch(
-        `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+        `https://api.spotify.com/v1/playlists/${playlistId}/items`,
         {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
