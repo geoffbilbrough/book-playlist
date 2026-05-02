@@ -19,9 +19,11 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'book-playlist-dev-secret',
   resave: false,
   saveUninitialized: false,
+  proxy: isProd,
   cookie: {
     secure: isProd,
     httpOnly: true,
+    sameSite: isProd ? 'none' : 'lax',
     maxAge: 24 * 60 * 60 * 1000,
   },
 }));
