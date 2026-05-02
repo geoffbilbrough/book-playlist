@@ -138,14 +138,18 @@ router.post('/create-playlist', async (req, res) => {
 
     const playlistId = playlistRes.data.id;
     const playlistUrl = playlistRes.data.external_urls.spotify;
+    console.log('Playlist created:', playlistId, 'owner:', playlistRes.data.owner?.id);
 
     // Add tracks (Spotify allows up to 100 per request)
     for (let i = 0; i < trackUris.length; i += 100) {
-      await axios.post(
+      const batch = trackUris.slice(i, i + 100);
+      console.log('Adding tracks to playlist:', playlistId, 'batch:', JSON.stringify(batch.slice(0, 2)));
+      const addRes = await axios.post(
         `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
-        { uris: trackUris.slice(i, i + 100) },
+        { uris: batch },
         { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } },
       );
+      console.log('Add tracks response:', addRes.status, addRes.data);
     }
 
     res.json({ success: true, playlistUrl, trackCount: trackUris.length });
