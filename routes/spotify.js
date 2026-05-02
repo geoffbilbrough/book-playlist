@@ -144,23 +144,24 @@ router.post('/create-playlist', async (req, res) => {
     for (let i = 0; i < trackUris.length; i += 100) {
       const batch = trackUris.slice(i, i + 100);
       console.log('Adding tracks to playlist:', playlistId, 'batch:', JSON.stringify(batch.slice(0, 2)));
-      const addRes = await axios.put(
+      const addRes = await fetch(
         `https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
-        { uris: batch },
-        { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } },
+        {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ uris: batch }),
+        },
       );
-      console.log('Add tracks response:', addRes.status, addRes.data);
+      const addData = await addRes.json();
+      console.log('Add tracks response:', addRes.status, JSON.stringify(addData));
+      if (!addRes.ok) throw new Error(`Add tracks failed: ${addRes.status} ${JSON.stringify(addData)}`);
     }
 
     res.json({ success: true, playlistUrl, trackCount: trackUris.length });
   } catch (err) {
     console.error('Create playlist error:', err.response?.data || err.message);
-    console.error('Status:', err.response?.status);
-    console.error('URL:', err.config?.url);
     console.error('Token (first 20):', token?.slice(0, 20));
     console.error('UserId:', userId);
-    console.error('Track URIs:', JSON.stringify(trackUris.slice(0, 3)));
-    console.error('Response headers:', JSON.stringify(err.response?.headers));
     res.status(500).json({ error: 'Failed to create Spotify playlist.' });
   }
 });
