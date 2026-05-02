@@ -107,6 +107,7 @@ async function handleSubmit(e) {
   currentPlaylist = { title, author, songs };
   hideLoading();
   renderResults(analysisData.analysis, songs, title, author);
+  gtag('event', 'playlist_generated', { book_title: title, book_author: author, era: selectedEra });
 }
 
 // ── Render ───────────────────────────────────────────────────────────────────
@@ -270,6 +271,7 @@ async function savePlaylist() {
 
     if (!res.ok) throw new Error(data.error || 'Failed to save playlist.');
 
+    gtag('event', 'playlist_saved', { book_title: currentPlaylist.title, book_author: currentPlaylist.author });
     showToast(
       `Playlist saved! <a href="${data.playlistUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration:underline">Open in Spotify ↗</a>`,
       'success',
