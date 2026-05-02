@@ -1,0 +1,21 @@
+{
+  "name": "book-playlist",
+  "version": "1.0.0",
+  "description": "Generate Spotify playlists from books using AI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "axios": "^1.7.0",
+    "dotenv": "^16.4.0",
+    "express": "^4.19.0",
+    "express-session": "^1.18.0",
+    "selfsigned": "^2.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
