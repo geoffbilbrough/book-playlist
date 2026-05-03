@@ -9,24 +9,6 @@ function authHeader() {
   return `Basic ${Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64')}`;
 }
 
-async function spotifySearch(token, params, retries = 2) {
-  for (let i = 0; i <= retries; i++) {
-    try {
-      return await axios.get('https://api.spotify.com/v1/search', {
-        params: { ...params, type: 'track', limit: 1 },
-        headers: { Authorization: `Bearer ${token}` },
-      });
-    } catch (err) {
-      if (err.response?.status === 429 && i < retries) {
-        const wait = (err.response.headers['retry-after'] || 2) * 1000;
-        await new Promise((r) => setTimeout(r, wait));
-      } else {
-        throw err;
-      }
-    }
-  }
-}
-
 async function ensureFreshToken(req) {
   if (!req.session.spotifyTokens) return false;
 
@@ -73,11 +55,17 @@ router.post('/search', async (req, res) => {
     songs.map(async (song) => {
       try {
         const query = `${song.title} ${song.artist}`;
-        const searchRes = await spotifySearch(token, { q: query });
+        const searchRes = await axios.get('https://api.spotify.com/v1/search', {
+          params: { q: query, type: 'track', limit: 1 },
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         const track = searchRes.data.tracks?.items?.[0];
         if (!track) {
-          const fallbackRes = await spotifySearch(token, { q: song.title });
+          const fallbackRes = await axios.get('https://api.spotify.com/v1/search', {
+            params: { q: song.title, type: 'track', limit: 1 },
+            headers: { Authorization: `Bearer ${token}` },
+          });
           const fallback = fallbackRes.data.tracks?.items?.[0];
           if (fallback) {
             return {
