@@ -45,9 +45,7 @@ async function ensureFreshToken(req) {
 
 // POST /api/spotify/search — search Spotify for a list of songs
 router.post('/search', async (req, res) => {
-  console.log('Search hit — session tokens present:', !!req.session.spotifyTokens);
   const token = await ensureFreshToken(req);
-  console.log('Token resolved:', !!token);
   if (!token) return res.status(401).json({ error: 'Not authenticated with Spotify.' });
 
   const { songs } = req.body;
@@ -57,12 +55,10 @@ router.post('/search', async (req, res) => {
     songs.map(async (song) => {
       try {
         const query = `track:${song.title} artist:${song.artist}`;
-        console.log(`Searching Spotify: ${query}`);
         const searchRes = await axios.get('https://api.spotify.com/v1/search', {
           params: { q: query, type: 'track', limit: 1 },
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log(`Search result for "${song.title}": ${searchRes.data.tracks?.items?.length ?? 0} tracks`);
 
         const track = searchRes.data.tracks?.items?.[0];
         if (!track) {
