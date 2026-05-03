@@ -12,6 +12,47 @@ document.getElementById('eraPills').addEventListener('click', (e) => {
   selectedEra = pill.dataset.value;
 });
 
+// ── Surprise me ─────────────────────────────────────────────────────────────
+
+const SURPRISE_BOOKS = [
+  { title: 'The Road', author: 'Cormac McCarthy' },
+  { title: 'To Kill a Mockingbird', author: 'Harper Lee' },
+  { title: 'One Hundred Years of Solitude', author: 'Gabriel García Márquez' },
+  { title: 'The Great Gatsby', author: 'F. Scott Fitzgerald' },
+  { title: 'Beloved', author: 'Toni Morrison' },
+  { title: 'Crime and Punishment', author: 'Fyodor Dostoevsky' },
+  { title: 'Middlemarch', author: 'George Eliot' },
+  { title: 'Moby Dick', author: 'Herman Melville' },
+  { title: 'Anna Karenina', author: 'Leo Tolstoy' },
+  { title: 'Jane Eyre', author: 'Charlotte Brontë' },
+  { title: 'The Remains of the Day', author: 'Kazuo Ishiguro' },
+  { title: 'Americanah', author: 'Chimamanda Ngozi Adichie' },
+  { title: 'The Kite Runner', author: 'Khaled Hosseini' },
+  { title: 'Never Let Me Go', author: 'Kazuo Ishiguro' },
+  { title: 'Lonesome Dove', author: 'Larry McMurtry' },
+  { title: 'The Master and Margarita', author: 'Mikhail Bulgakov' },
+  { title: 'Shuggie Bain', author: 'Douglas Stuart' },
+  { title: 'Pachinko', author: 'Min Jin Lee' },
+  { title: 'A Fine Balance', author: 'Rohinton Mistry' },
+  { title: 'The God of Small Things', author: 'Arundhati Roy' },
+  { title: 'Normal People', author: 'Sally Rooney' },
+  { title: 'Hamnet', author: 'Maggie O\'Farrell' },
+  { title: 'The Secret History', author: 'Donna Tartt' },
+  { title: 'Birdsong', author: 'Sebastian Faulks' },
+  { title: 'The Hours', author: 'Michael Cunningham' },
+  { title: 'Blindness', author: 'José Saramago' },
+  { title: 'The Wind-Up Bird Chronicle', author: 'Haruki Murakami' },
+  { title: 'Norwegian Wood', author: 'Haruki Murakami' },
+  { title: 'Lolita', author: 'Vladimir Nabokov' },
+  { title: 'Invisible Man', author: 'Ralph Ellison' },
+];
+
+function surpriseMe() {
+  const book = SURPRISE_BOOKS[Math.floor(Math.random() * SURPRISE_BOOKS.length)];
+  document.getElementById('bookTitle').value = book.title;
+  document.getElementById('bookAuthor').value = book.author;
+}
+
 // ── Bootstrap ────────────────────────────────────────────────────────────────
 
 async function init() {
