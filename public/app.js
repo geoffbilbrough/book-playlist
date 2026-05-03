@@ -32,6 +32,32 @@ async function init() {
   if (params.get('error')) {
     showError('Spotify login failed. Please try again.');
     history.replaceState({}, '', '/');
+    return;
+  }
+
+  // Restore playlist after Spotify login
+  const pending = sessionStorage.getItem('pendingPlaylist');
+  if (pending && isAuthenticated) {
+    sessionStorage.removeItem('pendingPlaylist');
+    const { title, author, era, analysis, songs } = JSON.parse(pending);
+    selectedEra = era;
+    showLoading('Searching Spotify for your tracks…');
+    try {
+      const searchRes = await fetch('/api/spotify/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ songs }),
+      });
+      const enrichedSongs = searchRes.ok ? (await searchRes.json()).results : songs;
+      currentPlaylist = { title, author, songs: enrichedSongs };
+      hideLoading();
+      renderResults(analysis, enrichedSongs, title, author);
+      showToast('Spotify connected — your playlist is ready to save!', 'success');
+    } catch {
+      currentPlaylist = { title, author, songs };
+      hideLoading();
+      renderResults(analysis, songs, title, author);
+    }
   }
 }
 
@@ -85,6 +111,13 @@ async function handleSubmit(e) {
     return;
   }
 
+  // Save state so we can restore it after Spotify login
+  sessionStorage.setItem('pendingPlaylist', JSON.stringify({
+    title, author, era: selectedEra,
+    analysis: analysisData.analysis,
+    songs: analysisData.songs,
+  }));
+
   let songs = analysisData.songs || [];
 
   if (isAuthenticated && songs.length) {
@@ -102,6 +135,7 @@ async function handleSubmit(e) {
     } catch {
       // Non-fatal — render without Spotify data
     }
+    sessionStorage.removeItem('pendingPlaylist');
   }
 
   currentPlaylist = { title, author, songs };
