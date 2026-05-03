@@ -129,6 +129,7 @@ async function handleSubmit(e) {
   if (!title || !author) return;
 
   showLoading('Analysing your book…');
+  startCyclingMessages();
   hideResults();
   hideError();
 
@@ -188,6 +189,7 @@ async function handleSubmit(e) {
 // ── Render ───────────────────────────────────────────────────────────────────
 
 function renderResults(analysis, songs, title, author) {
+  document.title = `${title} — BookPlaylist`;
   document.getElementById('analysisBook').textContent = `${title} — ${author}`;
 
   const grid = document.getElementById('analysisGrid');
@@ -386,13 +388,38 @@ function updateSaveBtn() {
 
 // ── UI helpers ───────────────────────────────────────────────────────────────
 
+const LOADING_MESSAGES = [
+  'Analysing the emotional landscape…',
+  'Reading between the lines…',
+  'Tuning the frequency…',
+  'Consulting the literary oracle…',
+  'Mapping the mood…',
+  'Searching for the perfect rhythm…',
+  'Connecting pages to playlists…',
+  'Finding the soundtrack…',
+  'Weaving words into music…',
+  'Almost there…',
+];
+
+let loadingInterval = null;
+
 function showLoading(text) {
   setLoadingText(text);
   document.getElementById('loadingSection').classList.remove('hidden');
   document.getElementById('generateBtn').disabled = true;
 }
 
+function startCyclingMessages() {
+  let i = 0;
+  loadingInterval = setInterval(() => {
+    i = (i + 1) % LOADING_MESSAGES.length;
+    setLoadingText(LOADING_MESSAGES[i]);
+  }, 2800);
+}
+
 function hideLoading() {
+  clearInterval(loadingInterval);
+  loadingInterval = null;
   document.getElementById('loadingSection').classList.add('hidden');
   document.getElementById('generateBtn').disabled = false;
 }
@@ -419,6 +446,7 @@ function resetUI() {
   hideResults();
   hideLoading();
   currentPlaylist = null;
+  document.title = 'BookPlaylist — AI Music Curation';
   updateSaveBtn();
 }
 
