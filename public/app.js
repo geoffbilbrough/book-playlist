@@ -191,7 +191,7 @@ function renderResults(analysis, songs, title, author) {
   const found = songs.filter((s) => s.found !== false);
   document.getElementById('trackCount').textContent =
     isAuthenticated
-      ? `${found.length} of ${songs.length} found on Spotify`
+      ? `${found.length}/${songs.length} on Spotify`
       : `${songs.length} songs`;
 
   songs.forEach((song, i) => {

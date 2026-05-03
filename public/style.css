@@ -425,12 +425,22 @@ a { color: inherit; text-decoration: none; }
 .playlist-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .track-count {
   font-size: 0.8rem;
   color: var(--muted);
+  width: 100%;
+  order: 1;
+}
+
+@media (min-width: 480px) {
+  .track-count {
+    width: auto;
+    order: 0;
+  }
 }
 
 /* ── Songs grid ───────────────────────────────────────────────────────────── */
