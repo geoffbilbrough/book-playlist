@@ -137,7 +137,7 @@ function renderResults(analysis, songs, title, author) {
       for (const theme of item.value) {
         const tag = document.createElement('span');
         tag.className = 'theme-tag';
-        tag.textContent = theme;
+        tag.textContent = theme.replace(/\b\w/g, (c) => c.toUpperCase());
         themesList.appendChild(tag);
       }
       div.appendChild(themesList);
