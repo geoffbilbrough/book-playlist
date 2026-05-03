@@ -54,7 +54,7 @@ router.post('/search', async (req, res) => {
   const results = await Promise.all(
     songs.map(async (song) => {
       try {
-        const query = `track:${song.title} artist:${song.artist}`;
+        const query = `${song.title} ${song.artist}`;
         const searchRes = await axios.get('https://api.spotify.com/v1/search', {
           params: { q: query, type: 'track', limit: 1 },
           headers: { Authorization: `Bearer ${token}` },
