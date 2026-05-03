@@ -643,17 +643,3 @@ a { color: inherit; text-decoration: none; }
 
 /* ── Utility ──────────────────────────────────────────────────────────────── */
 .hidden { display: none !important; }
-
-/* ── Footer ───────────────────────────────────────────────────────────────── */
-
-.footer {
-  text-align: center;
-  padding: 40px 24px;
-  color: var(--muted);
-  font-size: 0.8rem;
-}
-.footer a {
-  color: var(--muted);
-  text-decoration: underline;
-}
-.footer a:hover { color: var(--text); }
