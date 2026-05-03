@@ -71,7 +71,8 @@ router.post('/analyze', async (req, res) => {
 You create thoughtful playlists that enhance the reading experience of books.
 When given a book, you analyse its emotional landscape and suggest songs that a
 discerning reader would genuinely want to listen to while reading.
-Mix genres and energy levels to reflect the full arc of the book.`,
+Mix genres and energy levels to reflect the full arc of the book.
+Use New Zealand English spelling in all your responses (e.g. analyse, colour, realise, favourite).`,
       messages: [
         {
           role: 'user',
