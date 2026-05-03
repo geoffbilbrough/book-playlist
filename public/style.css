@@ -240,21 +240,28 @@ a { color: inherit; text-decoration: none; }
 /* ── Surprise row ─────────────────────────────────────────────────────────── */
 .surprise-row {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .btn-surprise {
-  background: none;
+  background: var(--blue);
+  color: #fff;
   border: none;
-  color: var(--blue);
-  font-size: 0.85rem;
-  font-weight: 500;
+  border-radius: 100px;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  padding: 0;
   font-family: inherit;
-  transition: opacity var(--transition);
+  width: 100%;
+  transition: all var(--transition);
+  letter-spacing: -0.01em;
 }
-.btn-surprise:hover { opacity: 0.7; }
+.btn-surprise:hover {
+  background: var(--blue-dim);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 113, 227, 0.35);
+}
 
 /* ── Era pills ────────────────────────────────────────────────────────────── */
 .era-pills {
