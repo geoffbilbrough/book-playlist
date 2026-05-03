@@ -51,8 +51,10 @@ router.post('/search', async (req, res) => {
   const { songs } = req.body;
   if (!Array.isArray(songs)) return res.status(400).json({ error: 'songs array required.' });
 
-  const results = await Promise.all(
-    songs.map(async (song) => {
+  const results = [];
+  for (const song of songs) {
+    await new Promise((r) => setTimeout(r, 100));
+    results.push(await (async () => {
       try {
         const query = `${song.title} ${song.artist}`;
         const searchRes = await axios.get('https://api.spotify.com/v1/search', {
@@ -97,11 +99,11 @@ router.post('/search', async (req, res) => {
           external_url: track.external_urls.spotify,
         };
       } catch (err) {
-        console.error(`Search error for "${song.title}":`, err.response?.status, err.response?.data || err.message);
+        console.error(`Search error for "${song.title}":`, err.response?.status, err.message);
         return { ...song, found: false };
       }
-    }),
-  );
+    })());
+  }
 
   res.json({ results });
 });
