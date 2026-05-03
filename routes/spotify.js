@@ -69,10 +69,8 @@ router.post('/search', async (req, res) => {
   const { songs } = req.body;
   if (!Array.isArray(songs)) return res.status(400).json({ error: 'songs array required.' });
 
-  const results = [];
-  for (const song of songs) {
-    await new Promise((r) => setTimeout(r, 200));
-    results.push(await (async () => {
+  const results = await Promise.all(
+    songs.map(async (song) => {
       try {
         const query = `${song.title} ${song.artist}`;
         const searchRes = await spotifySearch(token, { q: query });
@@ -114,8 +112,8 @@ router.post('/search', async (req, res) => {
         console.error(`Search error for "${song.title}":`, err.response?.status, err.message);
         return { ...song, found: false };
       }
-    })());
-  }
+    }),
+  );
 
   res.json({ results });
 });
