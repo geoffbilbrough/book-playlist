@@ -247,6 +247,26 @@ function buildSongCard(song, n) {
   return card;
 }
 
+// ── Share playlist ───────────────────────────────────────────────────────────
+
+async function sharePlaylist() {
+  if (!currentPlaylist) return;
+
+  const text = `I just created an AI playlist for "${currentPlaylist.title}" by ${currentPlaylist.author} 🎵`;
+  const url = 'https://book-playlist-production.up.railway.app';
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: 'BookPlaylist', text, url });
+    } catch {
+      // User cancelled — do nothing
+    }
+  } else {
+    await navigator.clipboard.writeText(`${text}\n${url}`);
+    showToast('Copied to clipboard!', 'success');
+  }
+}
+
 // ── Save playlist ────────────────────────────────────────────────────────────
 
 async function savePlaylist() {
