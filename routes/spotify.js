@@ -45,7 +45,9 @@ async function ensureFreshToken(req) {
 
 // POST /api/spotify/search — search Spotify for a list of songs
 router.post('/search', async (req, res) => {
+  console.log('Search hit — session tokens present:', !!req.session.spotifyTokens);
   const token = await ensureFreshToken(req);
+  console.log('Token resolved:', !!token);
   if (!token) return res.status(401).json({ error: 'Not authenticated with Spotify.' });
 
   const { songs } = req.body;
