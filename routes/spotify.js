@@ -54,7 +54,7 @@ router.post('/search', async (req, res) => {
   const results = await Promise.all(
     songs.map(async (song) => {
       try {
-        const query = `track:${encodeURIComponent(song.title)} artist:${encodeURIComponent(song.artist)}`;
+        const query = `track:${song.title} artist:${song.artist}`;
         const searchRes = await axios.get('https://api.spotify.com/v1/search', {
           params: { q: query, type: 'track', limit: 1 },
           headers: { Authorization: `Bearer ${token}` },
@@ -63,7 +63,7 @@ router.post('/search', async (req, res) => {
         const track = searchRes.data.tracks?.items?.[0];
         if (!track) {
           const fallbackRes = await axios.get('https://api.spotify.com/v1/search', {
-            params: { q: encodeURIComponent(song.title), type: 'track', limit: 1 },
+            params: { q: song.title, type: 'track', limit: 1 },
             headers: { Authorization: `Bearer ${token}` },
           });
           const fallback = fallbackRes.data.tracks?.items?.[0];
