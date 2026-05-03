@@ -566,6 +566,32 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--border);
 }
 
+/* ── Mobile polish ────────────────────────────────────────────────────────── */
+@media (max-width: 560px) {
+  .hero { padding: 48px 16px 32px; }
+
+  .form-card { padding: 20px 16px; }
+
+  .analysis-card { padding: 20px 16px; }
+
+  .analysis-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  .results-section { padding: 0 12px; }
+
+  .song-card { padding: 10px 12px; gap: 10px; }
+
+  .song-art,
+  .song-art-placeholder { width: 42px; height: 42px; }
+
+  .song-reason { display: none; }
+
+  .song-album { margin-bottom: 0; }
+
+  .song-number { width: 16px; }
+
+  .songs-grid { gap: 4px; }
+}
+
 /* ── Toast ────────────────────────────────────────────────────────────────── */
 .toast {
   position: fixed;
