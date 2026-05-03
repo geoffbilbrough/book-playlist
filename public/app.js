@@ -123,12 +123,12 @@ function renderResults(analysis, songs, title, author) {
     { label: 'Setting', value: analysis.setting },
     { label: 'Era', value: analysis.era },
     { label: 'Characters', value: analysis.characters },
-    { label: 'Themes', value: analysis.themes, isThemes: true },
+    { label: 'Themes', value: analysis.themes, isThemes: true, fullWidth: true },
   ];
 
   for (const item of items) {
     const div = document.createElement('div');
-    div.className = 'analysis-item';
+    div.className = `analysis-item${item.fullWidth ? ' full-width' : ''}`;
     div.innerHTML = `<div class="analysis-label">${item.label}</div>`;
 
     if (item.isThemes && Array.isArray(item.value)) {
