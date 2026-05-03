@@ -96,7 +96,8 @@ router.post('/search', async (req, res) => {
           preview_url: track.preview_url,
           external_url: track.external_urls.spotify,
         };
-      } catch {
+      } catch (err) {
+        console.error(`Search error for "${song.title}":`, err.response?.status, err.response?.data || err.message);
         return { ...song, found: false };
       }
     }),
