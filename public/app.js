@@ -192,7 +192,7 @@ function renderResults(analysis, songs, title, author) {
   document.getElementById('trackCount').textContent =
     isAuthenticated
       ? `${found.length}/${songs.length} on Spotify`
-      : `${songs.length} songs`;
+      : `${songs.length} songs — connect Spotify to see album art & save`;
 
   songs.forEach((song, i) => {
     songsGrid.appendChild(buildSongCard(song, i + 1));
