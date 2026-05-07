@@ -12,6 +12,7 @@
     "axios": "^1.7.0",
     "dotenv": "^16.4.0",
     "express": "^4.19.0",
+    "express-rate-limit": "^8.5.1",
     "express-session": "^1.18.0",
     "selfsigned": "^2.4.0"
   },

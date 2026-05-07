@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -28,9 +29,19 @@ app.use(session({
   },
 }));
 
+// Rate limiting — max 5 playlist generations per IP per hour
+const analyzeLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  message: { error: 'Too many requests. Please try again in an hour.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
 app.get('/callback', authRoutes.handleCallback);
+app.use('/api/analyze', analyzeLimiter);
 app.use('/api', require('./routes/analyze'));
 app.use('/api/spotify', require('./routes/spotify'));
 
